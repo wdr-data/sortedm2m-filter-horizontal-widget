@@ -72,14 +72,21 @@ class SortedFilteredSelectMultiple(forms.SelectMultiple):
         self.is_stacked = is_stacked
         super(SortedFilteredSelectMultiple, self).__init__(attrs, choices)
 
-    class Media:
+    @property
+    def media(self):
+        extra = '' if settings.DEBUG else '.min'
         css = {
-            'screen': (STATIC_URL + 'sortedm2m_filter_horizontal_widget/widget.css',)
+            'screen': ('sortedm2m_filter_horizontal_widget/css/widget.css',)
         }
 
-        js = (STATIC_URL + 'sortedm2m_filter_horizontal_widget/OrderedSelectBox.js',
-              STATIC_URL + 'sortedm2m_filter_horizontal_widget/OrderedSelectFilter.js',
-              STATIC_URL + 'sortedm2m_filter_horizontal_widget/jquery.min.js')
+        js = (
+            f'admin/js/vendor/jquery/jquery{extra}.js',
+            'admin/js/jquery.init.js',
+            'admin/js/inlines.js',
+            'sortedm2m_filter_horizontal_widget/js/OrderedSelectBox.js',
+            'sortedm2m_filter_horizontal_widget/js/OrderedSelectFilter.js',
+        )
+        return forms.Media(js=js, css=css)
 
     def build_attrs(self, attrs=None, extra_attrs=None, **kwargs):
         attrs = dict(attrs, **kwargs)
