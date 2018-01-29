@@ -153,9 +153,9 @@ var OrderedSelectFilter = {
 
         if (!is_stacked) {
             // In horizontal mode, give the same height to the two boxes.
-            var j_from_box = $(from_box);
-            var j_to_box = $(to_box);
-            var resize_filters = function() { j_to_box.height($(filter_p).outerHeight() + j_from_box.outerHeight()); };
+            var j_from_box = django.jQuery(from_box);
+            var j_to_box = django.jQuery(to_box);
+            var resize_filters = function() { j_to_box.height(django.jQuery(filter_p).outerHeight() + j_from_box.outerHeight()); };
             if (j_from_box.outerHeight() > 0) {
                 resize_filters(); // This fieldset is already open. Resize now.
             } else {
@@ -167,18 +167,18 @@ var OrderedSelectFilter = {
         OrderedSelectFilter.refresh_icons(field_id);
     },
     refresh_icons: function(field_id) {
-        var from = $('#' + field_id + '_from');
-        var to = $('#' + field_id + '_to');
+        var from = django.jQuery('#' + field_id + '_from');
+        var to = django.jQuery('#' + field_id + '_to');
         var is_from_selected  = from.find('option:selected').length > 0;
         var is_to_selected    =   to.find('option:selected').length > 0;
         var is_from_non_empty = from.find('option').length > 0;
         var is_to_non_empty   =   to.find('option').length > 0;
         // Active if at least one item is selected
-        $('#' + field_id + '_add_link').toggleClass('active', is_from_selected);
-        $('#' + field_id + '_remove_link').toggleClass('active', is_to_selected);
+        django.jQuery('#' + field_id + '_add_link').toggleClass('active', is_from_selected);
+        django.jQuery('#' + field_id + '_remove_link').toggleClass('active', is_to_selected);
         // Active if the corresponding box isn't empty
-        $('#' + field_id + '_add_all_link').toggleClass('active', is_from_non_empty);
-        $('#' + field_id + '_remove_all_link').toggleClass('active', is_to_non_empty);
+        django.jQuery('#' + field_id + '_add_all_link').toggleClass('active', is_from_non_empty);
+        django.jQuery('#' + field_id + '_remove_all_link').toggleClass('active', is_to_non_empty);
     },
     filter_key_up: function(event, field_id) {
         from = document.getElementById(field_id + '_from');
