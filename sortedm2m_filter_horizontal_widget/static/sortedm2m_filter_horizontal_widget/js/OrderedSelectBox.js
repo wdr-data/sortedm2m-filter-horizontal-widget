@@ -109,11 +109,15 @@ var OrderedSelectBox = {
     },
     sort: function(id) {
         OrderedSelectBox.cache[id].sort( function(a, b) {
-            a = a.text.toLowerCase();
-            b = b.text.toLowerCase();
+            as = a.text.split('.')
+            bs = b.text.split('.')
+
+            ad = as[2].split(' ')[0] + as[1] + as[0]
+            bd = bs[2].split(' ')[0] + bs[1] + bs[0]
+
             try {
-                if (a > b) return 1;
-                if (a < b) return -1;
+                if (ad > bd) return 1;
+                if (ad < bd) return -1;
             }
             catch (e) {
                 // silently fail on IE 'unknown' exception
