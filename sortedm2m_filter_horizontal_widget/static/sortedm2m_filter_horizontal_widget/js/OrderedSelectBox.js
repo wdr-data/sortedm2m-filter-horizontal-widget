@@ -125,8 +125,8 @@ var OrderedSelectBox = {
             bd = bs[2].split(' ')[0] + bs[1] + bs[0]
 
             try {
-                if (ad > bd) return 1;
-                if (ad < bd) return -1;
+                if (ad > bd) return -1;
+                if (ad < bd) return 1;
             }
             catch (e) {
                 // silently fail on IE 'unknown' exception
