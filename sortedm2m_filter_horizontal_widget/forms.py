@@ -60,7 +60,7 @@ class SortedFilteredSelectMultiple(forms.SelectMultiple):
         }
 
         js = (
-            'admin/jsi18n/',
+            '../admin/jsi18n/',
             f'admin/js/vendor/jquery/jquery{extra}.js',
             'admin/js/jquery.init.js',
             'admin/js/inlines.js',
