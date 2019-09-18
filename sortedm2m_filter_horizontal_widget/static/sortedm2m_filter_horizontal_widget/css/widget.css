@@ -106,10 +106,10 @@ body.change-form .sortedm2m-container {
 
 @media (max-width: 1024px) {
   .selector-up {
-    background: url(../admin/img/selector-icons.svg) 0 0 no-repeat;
+    background: url(../../admin/img/selector-icons.svg) 0 0 no-repeat;
   }
   .selector-down {
-    background: url(../admin/img/selector-icons.svg) 0 -41px no-repeat;
+    background: url(../../admin/img/selector-icons.svg) 0 -41px no-repeat;
   }
   .selector-up:hover {
     background-position: 0 -20px;
