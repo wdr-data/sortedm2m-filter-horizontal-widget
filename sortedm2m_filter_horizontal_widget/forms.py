@@ -60,12 +60,10 @@ class SortedFilteredSelectMultiple(forms.SelectMultiple):
         }
 
         js = (
-            'admin/jsi18n/',
+            '../admin/jsi18n/',
             f'admin/js/vendor/jquery/jquery{extra}.js',
             'admin/js/jquery.init.js',
             'admin/js/inlines.js',
-            'sortedm2m_filter_horizontal_widget/js/addEvent.js',
-            'sortedm2m_filter_horizontal_widget/js/jquery.formset.min.js',
             'sortedm2m_filter_horizontal_widget/js/OrderedSelectBox.js',
             'sortedm2m_filter_horizontal_widget/js/OrderedSelectFilter.js',
         )
@@ -86,12 +84,12 @@ class SortedFilteredSelectMultiple(forms.SelectMultiple):
         attrs['class'] = ' '.join(classes)
         return attrs
 
-    def render(self, name, value, attrs=None, choices=()):
+    def render(self, name, value, attrs=None, choices=(), renderer=None):
         if attrs is None:
-            attrs = {}
+          attrs = {}
 
         if value is None:
-            value = []
+          value = []
 
         admin_media_prefix = getattr(settings, 'ADMIN_MEDIA_PREFIX', STATIC_URL + 'admin/')
         final_attrs = self.build_attrs(self.attrs, attrs, name=name)
@@ -103,45 +101,34 @@ class SortedFilteredSelectMultiple(forms.SelectMultiple):
             verbose_name = final_attrs['verbose_name']
         else:
             verbose_name = name.split('-')[-1]
-        output.append('</select><script>addEvent(window, "load", function(e) {'
-                      f'OrderedSelectFilter.init("id_{name}", "{verbose_name}", '
-                      f'{int(self.is_stacked)}, "{admin_media_prefix}") '
-                      '});</script>')
-
-        prefix_name = name.split('-')[0]
-        output.append(f"""
+        output.append(u'</select>')
+        output.append(u'<script>window.addEventListener("load", function(e) {')
+        output.append(u'OrderedSelectFilter.init("id_%s", "%s", %s, "%s") });</script>\n' % \
+                      (name, verbose_name, int(self.is_stacked), admin_media_prefix))
+        output.append(u"""
         <script>
-            (function($) {{
-            $(document).ready(function() {{
-                var rows = "#{prefix_name}-group .inline-related";
-                var updateOrderedSelectFilter = function() {{
+        (function($) {
+            $(document).ready(function() {
+                var updateOrderedSelectFilter = function() {
                     // If any SelectFilter widgets are a part of the new form,
                     // instantiate a new SelectFilter instance for it.
-                    if (typeof OrderedSelectFilter != "undefined"){{
-                        $(".sortedm2m").each(function(index, value){{
+                    if (typeof OrderedSelectFilter != "undefined"){
+                        $(".sortedm2m").each(function(index, value){
                             var namearr = value.name.split('-');
-                            OrderedSelectFilter.init(value.id, namearr[namearr.length-1], false, "{admin_media_prefix}");
-                        }});
-                        $(".sortedm2mstacked").each(function(index, value){{
+                            OrderedSelectFilter.init(value.id, namearr[namearr.length-1], false, "%s");
+                        });
+                        $(".sortedm2mstacked").each(function(index, value){
                             var namearr = value.name.split('-');
-                            OrderedSelectFilter.init(value.id, namearr[namearr.length-1], true, "{admin_media_prefix}");
-                        }});
-                    }}
-                }}
-                $(rows).formset({{
-                    prefix: "{prefix_name}",
-                    addText: "{_('Add another')} {name.split('-')[-1]}",
-                    formCssClass: "dynamic-{prefix_name}",
-                    deleteCssClass: "inline-deletelink",
-                    deleteText: "Remove",
-                    emptyCssClass: "empty-form",
-                    added: (function(row) {{
-                        updateOrderedSelectFilter();
-                    }})
-                }});
-            }});
-        }})(django.jQuery)
-        </script>""")
+                            OrderedSelectFilter.init(value.id, namearr[namearr.length-1], true, "%s");
+                        });
+                    }
+                }
+                $(document).on('formset:added', function(row, prefix) {
+                    updateOrderedSelectFilter();
+                });
+            });
+        })(django.jQuery)
+        </script>""" % (admin_media_prefix, admin_media_prefix))
 
         return mark_safe('\n'.join(output))
 
